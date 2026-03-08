@@ -8,7 +8,17 @@ const loadLevelWord = (id) => {
   const url = `https://openapi.programming-hero.com/api/level/${id}`;
   fetch(url)
     .then((res) => res.json())
-    .then((json) => displayLevelWord(json.data));
+    .then((json) => {
+      const clickedBtn = document.getElementById(`lesson-btn-${id}`);
+      removeActive(); // remove all active classes
+      clickedBtn.classList.add("active");
+      displayLevelWord(json.data);
+    });
+};
+
+const removeActive = () => {
+  const lessonButtons = document.querySelectorAll(".lesson-btn");
+  lessonButtons.forEach((btn) => btn.classList.remove("active"));
 };
 
 const displayLevelWord = (words) => {
@@ -32,8 +42,6 @@ const displayLevelWord = (words) => {
   }
 
   words.forEach((word) => {
-    console.log(word);
-
     const card = document.createElement("div");
     card.innerHTML = `
         <div
@@ -43,7 +51,7 @@ const displayLevelWord = (words) => {
         <p class="font-semibold">Meaning / Pronunciation</p>
         <div class="font-bangla text-2xl font-medium">${word.meaning ? word.meaning : "অর্থ পাওয়া যায় নি"} / ${word.pronunciation ? word.pronunciation : "উচ্চারণ পাওয়া যায় নি"}</div>
         <div class="flex justify-between items-center">
-          <button class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]">
+          <button onclick = "my_modal_5.showModal()" class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]">
             <i class="fa-solid fa-circle-info"></i>
           </button>
           <button class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]">
@@ -66,7 +74,7 @@ const displayLessons = (lessons) => {
     //3 create el
     const btnDiv = document.createElement("div");
     btnDiv.innerHTML = `
-                <button onclick = "loadLevelWord(${lesson.level_no})" class="btn btn-outline btn-primary">
+                <button id = 'lesson-btn-${lesson.level_no}' onclick = "loadLevelWord(${lesson.level_no})" class="btn btn-outline btn-primary lesson-btn">
                 <i class="fa-solid fa-book-open"></i>Lesson - ${lesson.level_no}
                 </button>
     `;
